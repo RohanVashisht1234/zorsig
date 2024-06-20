@@ -9,20 +9,31 @@ pub fn morse_to_char(key: []const u8) u8 {
     return if (eql(u8, key, ".-")) 'A' else if (eql(u8, key, "-...")) 'B' else if (eql(u8, key, "-.-.")) 'C' else if (eql(u8, key, "-..")) 'D' else if (eql(u8, key, ".")) 'E' else if (eql(u8, key, "..-.")) 'F' else if (eql(u8, key, "--.")) 'G' else if (eql(u8, key, "....")) 'H' else if (eql(u8, key, "..")) 'I' else if (eql(u8, key, ".---")) 'J' else if (eql(u8, key, "-.-")) 'K' else if (eql(u8, key, ".-..")) 'L' else if (eql(u8, key, "--")) 'M' else if (eql(u8, key, "-.")) 'N' else if (eql(u8, key, "---")) 'O' else if (eql(u8, key, ".--.")) 'P' else if (eql(u8, key, "--.-")) 'Q' else if (eql(u8, key, ".-.")) 'R' else if (eql(u8, key, "...")) 'S' else if (eql(u8, key, "-")) 'T' else if (eql(u8, key, "..-")) 'U' else if (eql(u8, key, "...-")) 'V' else if (eql(u8, key, ".--")) 'W' else if (eql(u8, key, "-..-")) 'X' else if (eql(u8, key, "-.--")) 'Y' else if (eql(u8, key, "--..")) 'Z' else if (eql(u8, key, "-----")) '0' else if (eql(u8, key, ".----")) '1' else if (eql(u8, key, "..---")) '2' else if (eql(u8, key, "...--")) '3' else if (eql(u8, key, "....-")) '4' else if (eql(u8, key, ".....")) '5' else if (eql(u8, key, "-....")) '6' else if (eql(u8, key, "--...")) '7' else if (eql(u8, key, "---..")) '8' else if (eql(u8, key, "----.")) '9' else if (eql(u8, key, ".-.-.-")) '.' else if (eql(u8, key, "--..--")) ',' else if (eql(u8, key, "..--..")) '?' else if (eql(u8, key, ".----.")) '\'' else if (eql(u8, key, "-.-.--")) '!' else if (eql(u8, key, "-..-.")) '/' else if (eql(u8, key, "-.--.")) '(' else if (eql(u8, key, "-.--.-")) ')' else if (eql(u8, key, ".-...")) '&' else if (eql(u8, key, "---...")) ':' else if (eql(u8, key, "-.-.-.")) ';' else if (eql(u8, key, "-...-")) '=' else if (eql(u8, key, ".-.-.")) '+' else if (eql(u8, key, "-....-")) '-' else if (eql(u8, key, "..--.-")) '_' else if (eql(u8, key, ".-..-.")) '\"' else if (eql(u8, key, "...-..-")) '$' else if (eql(u8, key, ".--.-.")) '@' else if (eql(u8, key, "/")) ' ' else '§';
 }
 
-pub fn morse_to_string(string_of_keys: []const u8, delimiter: []const u8) []const u8 {
+pub fn morse_to_string(allocator: std.mem.Allocator, string_of_keys: []const u8, delimiter: []const u8) ![]const u8 {
     var it = std.mem.split(u8, string_of_keys, delimiter);
-    var i:u8 = 0;
-    var data: []u8 = &[_]u8{};
-    while (it.next()) |x| : (i += 1)  {
-        data[i] = morse_to_char(x);
+    var list = std.ArrayList(u8).init(allocator);
+    while (it.next()) |morse| {
+        try list.append(morse_to_char(morse));
     }
-    return data;
+    return list.toOwnedSlice();
+}
+
+pub fn string_to_morse(allocator: std.mem.Allocator, string_of_keys: []const u8) ![]const u8 {
+    var list = std.ArrayList(u8).init(allocator);
+    for(string_of_keys)|v|{
+        for(char_to_morse(v))|f|{
+            try list.append(f);
+        }
+        try list.append(' ');
+    }
+    return list.toOwnedSlice();
 }
 
 test "morse" {
     const y = char_to_morse('X');
     const x = morse_to_char(".-");
-    const asdf = morse_to_string(".- .- .-", " ");
-    std.debug.print("this: {s} {s}\n", .{ y, asdf });
+    const asdf = try morse_to_string(std.heap.page_allocator, ".- .- .- .-", " ");
+    const f = try string_to_morse(std.heap.page_allocator, "HELLO");
+    std.debug.print("this: {s} ok;{s} \n\n {s}\n", .{ y, asdf, f });
     std.debug.print("{}\n", .{x});
 }
