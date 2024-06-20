@@ -39,14 +39,16 @@ const std = @import("std");
 /// }
 /// ```
 pub fn get_morse_from_char(character: u8) ![]const u8 {
+    const allocator = std.heap.page_allocator;
     const character_upper = std.ascii.toUpper(character); // because dictionary only has upper case chars // converted u8 to []const u8 because dictionary only has []const u8
-    const vals = try getHashMap(); // finding the value from the hash map
+    const vals = try getHashMap(allocator); // finding the value from the hash map
     const val = vals.get(character_upper);
     if (val) |value| { // checking if value was found in hashmap or not
         return value; // returned the value if found
     } else { // if not found:
         return "XX"; // return XX if unknown symbol found
     }
+    defer vals.deinit();
     return "XX"; // unreachable code (dead code) whatever you call it!!!
 }
 
@@ -54,10 +56,8 @@ pub fn get_morse_from_char(character: u8) ![]const u8 {
 //     getHashMap().iterator();
 // }
 
-fn getHashMap() !std.AutoHashMap(u8, []const u8) {
-    const allocator = std.heap.page_allocator;
+fn getHashMap(allocator:std.mem.Allocator) !std.AutoHashMap(u8, []const u8) {
     var morse_hash_map = std.AutoHashMap(u8, []const u8).init(allocator);
-    defer morse_hash_map.deinit();
     try morse_hash_map.put('A', ".-");
     try morse_hash_map.put('B', "-...");
     try morse_hash_map.put('C', "-.-.");
