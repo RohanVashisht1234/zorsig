@@ -10,6 +10,8 @@ fn morse_to_char(key: []const u8) u8 {
 }
 
 test "morse" {
-    const x = char_to_morse('X');
-    std.debug.print("{s}", .{x});
+    const y = char_to_morse('X');
+    const x = morse_to_char(".-");
+    std.debug.print("{}", .{x});
+    std.debug.print("{s}", .{y});
 }
