@@ -27,70 +27,15 @@ pub fn string_to_morse(allocator: std.mem.Allocator, string_of_keys: []const u8)
     return list.toOwnedSlice();
 }
 
-pub fn get_hash_map_char_to_morse(allocator: std.mem.Allocator) !std.StringHashMap([]const u8) {
-    var morse_hash_map = std.StringHashMap([]const u8).init(allocator);
-    try morse_hash_map.put("A", ".-");
-    try morse_hash_map.put("B", "-...");
-    try morse_hash_map.put("C", "-.-.");
-    try morse_hash_map.put("D", "-..");
-    try morse_hash_map.put("E", ".");
-    try morse_hash_map.put("F", "..-.");
-    try morse_hash_map.put("G", "--.");
-    try morse_hash_map.put("H", "....");
-    try morse_hash_map.put("I", "..");
-    try morse_hash_map.put("J", ".---");
-    try morse_hash_map.put("K", "-.-");
-    try morse_hash_map.put("L", ".-..");
-    try morse_hash_map.put("M", "--");
-    try morse_hash_map.put("N", "-.");
-    try morse_hash_map.put("O", "---");
-    try morse_hash_map.put("P", ".--.");
-    try morse_hash_map.put("Q", "--.-");
-    try morse_hash_map.put("R", ".-.");
-    try morse_hash_map.put("S", "...");
-    try morse_hash_map.put("T", "-");
-    try morse_hash_map.put("U", "..-");
-    try morse_hash_map.put("V", "...-");
-    try morse_hash_map.put("W", ".--");
-    try morse_hash_map.put("X", "-..-");
-    try morse_hash_map.put("Y", "-.--");
-    try morse_hash_map.put("Z", "--..");
-    try morse_hash_map.put("0", "-----");
-    try morse_hash_map.put("1", ".----");
-    try morse_hash_map.put("2", "..---");
-    try morse_hash_map.put("3", "...--");
-    try morse_hash_map.put("4", "....-");
-    try morse_hash_map.put("5", ".....");
-    try morse_hash_map.put("6", "-....");
-    try morse_hash_map.put("7", "--...");
-    try morse_hash_map.put("8", "---..");
-    try morse_hash_map.put("9", "----.");
-    try morse_hash_map.put(".", ".-.-.-");
-    try morse_hash_map.put(",", "--..--");
-    try morse_hash_map.put("?", "..--..");
-    try morse_hash_map.put("'", ".----.");
-    try morse_hash_map.put("!", "-.-.--");
-    try morse_hash_map.put("/", "-..-.");
-    try morse_hash_map.put("(", "-.--.");
-    try morse_hash_map.put(")", "-.--.-");
-    try morse_hash_map.put("&", ".-...");
-    try morse_hash_map.put(",", "---...");
-    try morse_hash_map.put(";", "-.-.-.");
-    try morse_hash_map.put("=", "-...-");
-    try morse_hash_map.put("+", ".-.-.");
-    try morse_hash_map.put("-", "-....-");
-    try morse_hash_map.put("_", "..--.-");
-    try morse_hash_map.put("\"", ".-..-.");
-    try morse_hash_map.put("$", "...-..-");
-    try morse_hash_map.put("@", ".--.-.");
-    try morse_hash_map.put(" ", "/");
-    return morse_hash_map;
+pub fn get_hash_map_char_to_morse() std.StaticStringMap([]const u8) {
+    const map_char_to_morse = std.StaticStringMap([]const u8).initComptime(.{ .{ "A", ".-" }, .{ "B", "-..." }, .{ "C", "-.-." }, .{ "D", "-.." }, .{ "E", "." }, .{ "F", "..-." }, .{ "G", "--." }, .{ "H", "...." }, .{ "I", ".." }, .{ "J", ".---" }, .{ "K", "-.-" }, .{ "L", ".-.." }, .{ "M", "--" }, .{ "N", "-." }, .{ "O", "---" }, .{ "P", ".--." }, .{ "Q", "--.-" }, .{ "R", ".-." }, .{ "S", "..." }, .{ "T", "-" }, .{ "U", "..-" }, .{ "V", "...-" }, .{ "W", ".--" }, .{ "X", "-..-" }, .{ "Y", "-.--" }, .{ "Z", "--.." }, .{ "0", "-----" }, .{ "1", ".----" }, .{ "2", "..---" }, .{ "3", "...--" }, .{ "4", "....-" }, .{ "5", "....." }, .{ "6", "-...." }, .{ "7", "--..." }, .{ "8", "---.." }, .{ "9", "----." }, .{ ".", ".-.-.-" }, .{ ",", "--..--" }, .{ "?", "..--.." }, .{ "'", ".----." }, .{ "!", "-.-.--" }, .{ "/", "-..-." }, .{ "(", "-.--." }, .{ ")", "-.--.-" }, .{ "&", ".-..." }, .{ ":", "---..." }, .{ ";", "-.-.-." }, .{ "=", "-...-" }, .{ "+", ".-.-." }, .{ "-", "-....-" }, .{ "_", "..--.-" }, .{ "\"", ".-..-." }, .{ "$", "...-..-" }, .{ "@", ".--.-." }, .{ " ", "/" } });
+    return map_char_to_morse;
 }
 
 test "morse" {
     const y = char_to_morse('X');
     const x = morse_to_char(".-");
-    _ = get_hash_map_char_to_morse(std.heap.HeapAllocator);
+    _ = get_hash_map_char_to_morse();
     const asdf = try morse_to_string(std.heap.page_allocator, ".- .- .- .-", " ");
     const f = try string_to_morse(std.heap.page_allocator, "HELLO HOW ARE YOU");
     std.debug.print("this: {s} ok;{s} \n\n {s}\n", .{ y, asdf, f });
