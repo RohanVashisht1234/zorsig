@@ -1,4 +1,4 @@
-# Zorsig a better morse library for Zig programming language
+# Zorsig: a better morse library for Zig programming language
 
 Features:
 - minimum version of zig: 0.13.0
