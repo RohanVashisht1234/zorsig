@@ -12,12 +12,14 @@ pub fn morse_to_char(key: []const u8) u8 {
 pub fn morse_to_string(allocator: std.mem.Allocator, string_of_keys: []const u8, delimiter: []const u8) ![]const u8 {
     var it = std.mem.split(u8, string_of_keys, delimiter);
     var list = std.ArrayList(u8).init(allocator);
+    errdefer list.deinit();
     while (it.next()) |morse| try list.append(morse_to_char(morse));
     return list.toOwnedSlice();
 }
 
 pub fn string_to_morse(allocator: std.mem.Allocator, string_of_keys: []const u8) ![]const u8 {
     var list = std.ArrayList(u8).init(allocator);
+    errdefer list.deinit();
     for(string_of_keys)|v|{
         for(char_to_morse(v))|f| try list.append(f);
         try list.append(' ');
