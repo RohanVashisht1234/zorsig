@@ -27,8 +27,8 @@ pub fn string_to_morse(allocator: std.mem.Allocator, string_of_keys: []const u8)
     return list.toOwnedSlice();
 }
 
-pub fn get_hash_map_char_to_morse(allocator: std.mem.Allocator) !std.StringHashMap([]const u8) {
-    var my_hash_map = std.StringHashMap([]const u8).init(allocator).init(allocator);
+pub fn get_hash_map_char_to_morse(allocator: std.mem.Allocator) !   ([]const u8) {
+    var my_hash_map = std.StringHashMap([]const u8).init(allocator);
     try my_hash_map.put("A", ".-");
     try my_hash_map.put("B", "-...");
     try my_hash_map.put("C", "-.-.");
