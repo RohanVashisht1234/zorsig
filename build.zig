@@ -4,16 +4,14 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const lib = b.addStaticLibrary(.{
-        .name = "rohan",
-        .root_source_file = b.path("src/morse.zig"),
+    _ = b.addModule("zorsig", .{
+        .root_source_file = b.path("src/zorsig.zig"),
         .target = target,
         .optimize = optimize,
     });
-    b.installArtifact(lib);
     
     const lib_unit_tests = b.addTest(.{
-        .root_source_file = b.path("src/morse.zig"),
+        .root_source_file = b.path("src/zorsig.zig"),
         .target = target,
         .optimize = optimize,
     });

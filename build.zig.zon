@@ -2,6 +2,8 @@
     .name = "zorsig",
     .version = "0.0.1",
     .paths = .{
-        "src/morse.zig",
+        "build.zig",
+        "build.zig.zon",
+        "src",
     },
 }
