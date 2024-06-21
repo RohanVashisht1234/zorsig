@@ -20,18 +20,79 @@ pub fn morse_to_string(allocator: std.mem.Allocator, string_of_keys: []const u8,
 pub fn string_to_morse(allocator: std.mem.Allocator, string_of_keys: []const u8) ![]const u8 {
     var list = std.ArrayList(u8).init(allocator);
     errdefer list.deinit();
-    for(string_of_keys)|v|{
-        for(char_to_morse(v))|f| try list.append(f);
+    for (string_of_keys) |v| {
+        for (char_to_morse(v)) |f| try list.append(f);
         try list.append(' ');
     }
     return list.toOwnedSlice();
 }
 
+pub fn get_hash_map_char_to_morse(allocator: std.mem.Allocator) !std.StringHashMap([]const u8) {
+    var my_hash_map = std.StringHashMap([]const u8).init(allocator).init(allocator);
+    try my_hash_map.put("A", ".-");
+    try my_hash_map.put("B", "-...");
+    try my_hash_map.put("C", "-.-.");
+    try my_hash_map.put("D", "-..");
+    try my_hash_map.put("E", ".");
+    try my_hash_map.put("F", "..-.");
+    try my_hash_map.put("G", "--.");
+    try my_hash_map.put("H", "....");
+    try my_hash_map.put("I", "..");
+    try my_hash_map.put("J", ".---");
+    try my_hash_map.put("K", "-.-");
+    try my_hash_map.put("L", ".-..");
+    try my_hash_map.put("M", "--");
+    try my_hash_map.put("N", "-.");
+    try my_hash_map.put("O", "---");
+    try my_hash_map.put("P", ".--.");
+    try my_hash_map.put("Q", "--.-");
+    try my_hash_map.put("R", ".-.");
+    try my_hash_map.put("S", "...");
+    try my_hash_map.put("T", "-");
+    try my_hash_map.put("U", "..-");
+    try my_hash_map.put("V", "...-");
+    try my_hash_map.put("W", ".--");
+    try my_hash_map.put("X", "-..-");
+    try my_hash_map.put("Y", "-.--");
+    try my_hash_map.put("Z", "--..");
+    try my_hash_map.put("0", "-----");
+    try my_hash_map.put("1", ".----");
+    try my_hash_map.put("2", "..---");
+    try my_hash_map.put("3", "...--");
+    try my_hash_map.put("4", "....-");
+    try my_hash_map.put("5", ".....");
+    try my_hash_map.put("6", "-....");
+    try my_hash_map.put("7", "--...");
+    try my_hash_map.put("8", "---..");
+    try my_hash_map.put("9", "----.");
+    try my_hash_map.put(".", ".-.-.-");
+    try my_hash_map.put(",", "--..--");
+    try my_hash_map.put("?", "..--..");
+    try my_hash_map.put("'", ".----.");
+    try my_hash_map.put("!", "-.-.--");
+    try my_hash_map.put("/", "-..-.");
+    try my_hash_map.put("(", "-.--.");
+    try my_hash_map.put(")", "-.--.-");
+    try my_hash_map.put("&", ".-...");
+    try my_hash_map.put(",", "---...");
+    try my_hash_map.put(";", "-.-.-.");
+    try my_hash_map.put("=", "-...-");
+    try my_hash_map.put("+", ".-.-.");
+    try my_hash_map.put("-", "-....-");
+    try my_hash_map.put("_", "..--.-");
+    try my_hash_map.put("\"", ".-..-.");
+    try my_hash_map.put("$", "...-..-");
+    try my_hash_map.put("@", ".--.-.");
+    try my_hash_map.put(" ", "/");
+    return my_hash_map;
+}
+
 test "morse" {
     const y = char_to_morse('X');
     const x = morse_to_char(".-");
+    _ = get_hash_map_char_to_morse(std.heap.HeapAllocator);
     const asdf = try morse_to_string(std.heap.page_allocator, ".- .- .- .-", " ");
-    const f = try string_to_morse(std.heap.page_allocator, "HELLO±");
+    const f = try string_to_morse(std.heap.page_allocator, "HELLO HOW ARE YOU");
     std.debug.print("this: {s} ok;{s} \n\n {s}\n", .{ y, asdf, f });
     std.debug.print("{}\n", .{x});
 }
