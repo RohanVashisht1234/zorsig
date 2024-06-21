@@ -33,7 +33,7 @@ test "morse" {
     const y = char_to_morse('X');
     const x = morse_to_char(".-");
     const asdf = try morse_to_string(std.heap.page_allocator, ".- .- .- .-", " ");
-    const f = try string_to_morse(std.heap.page_allocator, "HELLO");
+    const f = try string_to_morse(std.heap.page_allocator, "HELLO±");
     std.debug.print("this: {s} ok;{s} \n\n {s}\n", .{ y, asdf, f });
     std.debug.print("{}\n", .{x});
 }
