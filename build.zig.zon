@@ -1,7 +1,7 @@
 .{
-    .name = "Zorsig",
+    .name = "zorsig",
     .version = "0.0.1",
     .paths = .{
-        "",
+        "src/morse.zig",
     },
-}   
+}
